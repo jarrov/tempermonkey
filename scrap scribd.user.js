@@ -7,11 +7,13 @@
 // @match        https://es.scribd.com/document/*
 // @match        https://es.scribd.com/doc/*
 // @grant        none
+// @require      http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js
 // @require      https://unpkg.com/jspdf@latest/dist/jspdf.min.js
 // @require      http://underscorejs.org/underscore-min.js
 // @require      https://raw.githubusercontent.com/mennovanslooten/underscore-observe/master/underscore-observe.js
 // ==/UserScript==
 
+window.addEventListener('load', function() {
 var pgs = [];
 
 function download(filename, text) {
@@ -52,13 +54,15 @@ function repararDescarga () {
     window["page" + (ind+1) + "_callback"] = function (arg) {
       pgs[ind] = arg[0].match(/orig="([^"]+)"/)[1];
     };
+    console.log(_);
     $.ajax({url: pag.contentUrl, dataType:"jsonp"});
   });
 
-  _.observe(pgs, function(new_array, old_array) {
+  $.observe(pgs, function(new_array, old_array) {
     if(new_array.length == length) {
       console.log("[1]");
       repararDescarga();
     }
   });
 })();
+  }, false);
